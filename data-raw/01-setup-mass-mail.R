@@ -87,7 +87,7 @@ massmail_read_email = function(massmail_email_url,
 massmail_meta_data = function(massmail_page) {
   purrr::map_dfc(
     c(
-      "date/time" = 1,
+      "datetime" = 1,
       "sent" = 2,
       "subject" = 4
     ),
@@ -96,7 +96,7 @@ massmail_meta_data = function(massmail_page) {
   ) %>%
     mutate(`url` = massmail_table_col_email(massmail_page),
            `sent` = readr::parse_number(`sent`),
-           `date/time` = lubridate::mdy_hm(`date/time`))
+           `datetime` = lubridate::mdy_hm(`datetime`))
 }
 
 # Handle non-table semantics
