@@ -143,7 +143,7 @@ ggplot(massmail_data_covid) +
   labs(
     title = "Number of Times COVID-19 Showed up in Massmails Sent",
     y = "Frequency",
-    x = "Day of Week"
+    x = "Date"
   ) + facet_wrap(~year(date))
 ```
 
@@ -157,7 +157,7 @@ ggplot(massmail_data_covid) +
   labs(
     title = "Weekdays When Massmails Were Sent with COVID-19 Information",
     y = "Frequency",
-    x = "Date"
+    x = "Day of Week"
   )
 ```
 
