@@ -95,6 +95,7 @@ massmail_meta_data = function(massmail_page) {
     massmail_page = massmail_page
   ) %>%
     mutate(`url` = massmail_table_col_email(massmail_page),
+           `sent` = readr::parse_number(`sent`),
            `date/time` = lubridate::mdy_hm(`date/time`))
 }
 
@@ -124,6 +125,10 @@ massmail_table = function(massmail_page) {
 massmail_page = read_html("https://massmail.illinois.edu/massmailArchive")
 massmail_data = massmail_table(massmail_page)
 
+# Preview data inside of RStudio
+View(massmail_data)
+
 # Export data ----
-usethis::use_data(massmail_data, overwrite = TRUE)
-readr::write_csv(massmail_data, path = "data/massmail-data.csv")
+#usethis::use_data(massmail_data, overwrite = TRUE)
+save(massmail_data, file = "data/massmail_data.rda")
+readr::write_csv(massmail_data, path = "data/massmail_data.csv")
