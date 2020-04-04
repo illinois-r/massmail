@@ -1,0 +1,33 @@
+on:
+  schedule:
+    - cron:  '*/15 */24 * * *'
+    # Run at every 15th minute past every 24th hour ~ 1 refresh a day.
+
+name: data-refresh
+
+jobs:
+  render:
+    name: data-refresh
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: r-lib/actions/setup-r@v1
+      - uses: r-lib/actions/setup-pandoc@v1
+      - name: Install Dependencies
+        run: Rscript -e 'install.packages(c("tidyverse", "tm", "ggwordcloud", "rvest", "lubridate"))'
+      - name: Rebuild data
+        run: Rscript -e 'source("data-raw/01-setup-mass-mail.R")'
+      - name: Commit data updates
+        run: |
+          git add data/* data-raw/* || echo "No new data to add"
+          git commit -m 'Re-build data' || echo "No data changes to commit"
+          git push https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git HEAD:${{ github.ref }} || echo "Nothing to push to github..."
+      - name: Install rmarkdown
+        run: Rscript -e 'install.packages("rmarkdown")'
+      - name: Render README
+        run: Rscript -e 'rmarkdown::render("README.Rmd")'
+      - name: Commit README graph updates
+        run: |
+          git add README.md README_files/* || echo "No figures to add"
+          git commit -m 'Re-build README.Rmd and Graphs' || echo "No updated figures to commit"
+          git push https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git HEAD:${{ github.ref }} || echo "Nothing to push to github..."

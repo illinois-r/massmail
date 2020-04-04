@@ -5,8 +5,8 @@
 
 <!-- badges: start -->
 
-[![Data build
-status](https://github.com/coatless/massmail/workflows/data-refresh/badge.svg)](https://github.com/coatless/massmail/actions)
+<!-- [![Data build status](https://github.com/coatless/massmail/workflows/data-refresh/badge.svg)](https://github.com/coatless/massmail/actions) -->
+
 <!-- badges: end -->
 
 The goal of the massmail repository is to provide access to the mass
@@ -202,6 +202,7 @@ head(most_popular_words, 10) %>%
 
 ``` r
 ## Create a wordcloud ---- 
+set.seed(1830)
 subset_popular_words = most_popular_words[most_popular_words$freq > 20, ]
 ggplot(subset_popular_words,
                   aes(
