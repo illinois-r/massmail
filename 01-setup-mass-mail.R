@@ -21,7 +21,7 @@ massmail_table_col_email = function(massmail_page) {
 
 # Massmail contents retrieval and caching ----
 massmail_download_email = function(massmail_email_url,
-                                   save_dir = "massmail-emails") {
+                                   save_dir = "data-raw/massmail-emails") {
   dir.create(save_dir, showWarnings = FALSE)
   
   # More control
@@ -36,7 +36,7 @@ massmail_download_email = function(massmail_email_url,
 }
 
 massmail_read_email = function(massmail_email_url,
-                               save_dir = "massmail-emails") {
+                               save_dir = "data-raw/massmail-emails") {
   
   file_loc = file.path(save_dir, basename(massmail_email_url))
   
@@ -124,4 +124,6 @@ massmail_table = function(massmail_page) {
 massmail_page = read_html("https://massmail.illinois.edu/massmailArchive")
 massmail_data = massmail_table(massmail_page)
 
-View(massmail_data)
+# Export data ----
+usethis::use_data(massmail_data, overwrite = TRUE)
+readr::write_csv(massmail_data, path = "data/massmail-data.csv")
