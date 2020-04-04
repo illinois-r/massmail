@@ -19,23 +19,23 @@ The archive may be viewed here:
 
 Data has **1109** observations and **7** variables:
 
-  - `datetime`: Date and time when the e-mail was sent in the form of
+  - `datetime`: Date and time when the email was sent in the form of
     `YYYY-MM-DD HMS` with either CDT or CST.
-  - `date`: Date when the e-mail was sent in the form of `YYYY-MM-DD`.
-  - `time`: Time when the e-mail was sent in the form of a 24 hour clock
+  - `date`: Date when the email was sent in the form of `YYYY-MM-DD`.
+  - `time`: Time when the email was sent in the form of a 24 hour clock
     with `HH:MM`.
   - `sent`: Number of recipients of the massmail.
-  - `subject`: Text displayed in the E-mail subject line
-  - `url`: Link to the official e-mail in the massmail archive.
+  - `subject`: Text displayed in the email subject line
+  - `url`: Link to the official email in the massmail archive.
   - `content`: Contents of the email without html markup.
 
-**Sample:**
+**Sample**
 
 | datetime            | date       | time  |  sent | subject                                  | url                                                   |
 | :------------------ | :--------- | :---: | ----: | :--------------------------------------- | :---------------------------------------------------- |
 | 2020-04-03 10:17:00 | 2020-04-03 | 10:17 | 76009 | COVID-19 update: Rising to the challenge | <https://massmail.illinois.edu/massmail/1930327.html> |
 
-**Email Contents:**
+**Email Contents**
 
     #> COVID-19 update: Rising to the challenge
     #>                 
@@ -49,10 +49,10 @@ Data has **1109** observations and **7** variables:
     #> Sincerely,Tim
     #> Additional resources:University of Illinois SystemUrbana-ChampaignUICUIS
 
-Data can be retrieved from:
+Data is made available under two file formats:
 
-  - CSV [`massmail_data.csv`](data/massmail_data.csv)
-  - RDA [`massmail_data.rda`](data/massmail_data.rda)
+  - CSV: [`massmail_data.csv`](data/massmail_data.csv)
+  - RDA: [`massmail_data.rda`](data/massmail_data.rda)
 
 To read in the files use either:
 
@@ -60,7 +60,9 @@ To read in the files use either:
 
 ``` r
 # Process data from CSV
-massmail_data = readr::read_csv("https://raw.githubusercontent.com/coatless/massmail/master/data/massmail_data.csv")
+massmail_data = readr::read_csv(
+  "https://raw.githubusercontent.com/coatless/massmail/master/data/massmail_data.csv"
+)
 
 # Loads as massmail_data without needing a layer of processing
 url = "https://raw.githubusercontent.com/coatless/massmail/master/data/massmail_data.rda"
@@ -75,7 +77,9 @@ load(basename(url))
 import pandas as pd
 
 # Load data into pandas
-massmail_df = pd.read_csv('https://raw.githubusercontent.com/coatless/massmail/master/data/massmail_data.csv')
+massmail_df = pd.read_csv(
+  'https://raw.githubusercontent.com/coatless/massmail/master/data/massmail_data.csv'
+)
 ```
 
 The data scraping, cleaning, and importation script steps were written
