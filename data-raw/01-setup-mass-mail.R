@@ -96,7 +96,9 @@ massmail_meta_data = function(massmail_page) {
   ) %>%
     mutate(`url` = massmail_table_col_email(massmail_page),
            `sent` = readr::parse_number(`sent`),
-           `datetime` = lubridate::mdy_hm(`datetime`))
+           `datetime` = lubridate::mdy_hm(`datetime`),
+           `date` = lubridate::date(`datetime`),
+           `time` = paste(hour(datetime), minute(datetime), sep=":"))
 }
 
 # Handle non-table semantics
@@ -117,7 +119,8 @@ massmail_table = function(massmail_page) {
   
   # Release table with emails attached
   massmail_meta_table %>%
-    mutate(contents = contents)
+    mutate(content = contents) %>%
+    select(`datetime`, `date`, `time`, `sent`, `subject`, `url`, `content`)
 }
 
 
