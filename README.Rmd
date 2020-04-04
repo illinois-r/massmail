@@ -40,9 +40,9 @@ Data has **`r nrow(massmail_data)`** observations and **`r ncol(massmail_data)`*
 - `url`: Link to the official e-mail in the massmail archive.
 - `content`: Contents of the email without html markup.
 
-Sample:
+**Sample:**
 
-```{r show-preview, include = FALSE}
+```{r show-preview, echo = FALSE, message = FALSE}
 library("tidyverse")
 id = massmail_data %>%
   dplyr::filter(url == "https://massmail.illinois.edu/massmail/1930327.html")
@@ -50,9 +50,9 @@ id = massmail_data %>%
 id %>% select(-content) %>% knitr::kable()
 ```
 
-Email Contents:
+**Email Contents:**
 
-```{r show-email, include = FALSE}
+```{r show-email, echo = FALSE}
 id %>% pull(content) %>% cat()
 ```
 

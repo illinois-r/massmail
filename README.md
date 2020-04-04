@@ -29,9 +29,25 @@ Data has **1109** observations and **7** variables:
   - `url`: Link to the official e-mail in the massmail archive.
   - `content`: Contents of the email without html markup.
 
-Sample:
+**Sample:**
 
-Email Contents:
+| datetime            | date       | time  |  sent | subject                                  | url                                                   |
+| :------------------ | :--------- | :---: | ----: | :--------------------------------------- | :---------------------------------------------------- |
+| 2020-04-03 10:17:00 | 2020-04-03 | 10:17 | 76009 | COVID-19 update: Rising to the challenge | <https://massmail.illinois.edu/massmail/1930327.html> |
+
+**Email Contents:**
+
+    #> COVID-19 update: Rising to the challenge
+    #>                 
+    #>                 April 3, 2020 10:01 AM
+    #> 
+    #>           Dear students, faculty, staff and friends:
+    #> I hope you are safe with those dearest to you as we all step back from our usual routines and do our part to provide the separation that science shows will slow the spread of the COVID-19 virus.
+    #> Our campuses are strangely quiet without you. But thanks to your understanding, flexibility and dedication, our important work goes on – world-class teaching and learning, pioneering research, life-changing patient care and cutting-edge scholarship that is helping lead efforts to stem the pandemic.
+    #> This short video reflects my deep appreciation for your sacrifice and for your important role in keeping our operations not just running but flourishing. I hope it gives you the same sense of awe and pride that I feel for our flagship university system and its bedrock commitment to the public good.
+    #> I hope to see you back on campus soon. In the meantime, take care of yourself and each other.
+    #> Sincerely,Tim
+    #> Additional resources:University of Illinois SystemUrbana-ChampaignUICUIS
 
 Data can be retrieved from:
 
