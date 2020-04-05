@@ -1,6 +1,7 @@
 # Load dependencies ----
 library("rvest")
 library("tidyverse")
+library("lubridate")
 
 # Non-tabular massmail parse rules ---- 
 
