@@ -9,6 +9,15 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+load("data/massmail_data.rda")
+knitr::read_chunk("R/01-dependencies.R")
+knitr::read_chunk("R/02-data-manipulation.R")
+knitr::read_chunk("R/03-ggplot-covid19-msg.R")
+knitr::read_chunk("R/04-wordcloud.R")
+```
+
+```{r pkg-dependencies, inclue = FALSE, echo = FALSE, message=FALSE} 
 ```
 
 # massmail
@@ -25,10 +34,6 @@ here:
 
 <https://massmail.illinois.edu/massmailArchive>
 
-```{r echo = FALSE, message=FALSE}
-load("data/massmail_data.rda")
-```
-
 Data has **`r nrow(massmail_data)`** observations and **`r ncol(massmail_data)`** variables:
 
 - `datetime`: Date and time when the email was sent in the form of `YYYY-MM-DD HMS` 
@@ -43,17 +48,11 @@ Data has **`r nrow(massmail_data)`** observations and **`r ncol(massmail_data)`*
 **Sample**
 
 ```{r show-preview, echo = FALSE, message = FALSE}
-library("tidyverse")
-id = massmail_data %>%
-  dplyr::filter(url == "https://massmail.illinois.edu/massmail/1930327.html")
-
-id %>% select(-content) %>% knitr::kable()
 ```
 
 **Email Contents**
 
 ```{r show-email, echo = FALSE}
-id %>% pull(content) %>% cat()
 ```
 
 Data is made available under two file formats:
@@ -97,135 +96,32 @@ and can be found at [`data-raw/01-setup-mass-mail.R`](data-raw/01-setup-mass-mai
 
 ### R Package Dependencies
 
-```{r pkg-dependencies, message = FALSE, warning = FALSE} 
-# Script dependencies ----
-
-# All packages needed for script
-pkg_list = c("tm", "tidyverse", "lubridate", "ggwordcloud")
-# Determine what packages are NOT installed already.
-to_install_pkgs = pkg_list[!(pkg_list %in% installed.packages()[,"Package"])]
-# Install the missing packages
-if(length(to_install_pkgs)) {
-    install.packages(to_install_pkgs, repos = "https://cloud.r-project.org")
-}
-
-# Load all packages
-pkg_loaded = sapply(pkg_list, require, character.only = TRUE)
+```{r pkg-dependencies, message = FALSE, warning = FALSE, eval = FALSE} 
 ```
 
 ### Data Load and Manipulation
 
 ```{r data-load, message = FALSE, warning = FALSE} 
-# Retrieve data ----
-
-# Read data in from CSV
-massmail_data = readr::read_csv(
-  "https://raw.githubusercontent.com/coatless/massmail/master/data/massmail_data.csv"
-)
-
-# Detection for covid19 string in text corpus
-detect_covid19_emails = function(x) { 
-  stringr::str_detect(x, regex("(covid-19|coronavirus)", ignore_case = TRUE))
-}
-
-# Restrict massmail archive to 2020 and add indicator variable for covid19
-massmail_data_covid =
-  massmail_data %>%
-  filter(year(`date`) > 2019) %>% # Restrict to AY 2020 - Present
-  mutate(covid19 = 
-           detect_covid19_emails(subject) | detect_covid19_emails(content),
-         weekday = wday(`date`, label=TRUE)
-        )
 ```
 
 ### Massmail Frequency Graphs
 
 ```{r sample-graphic, message = FALSE, warning = FALSE} 
-theme_set(theme_bw())
-
-library("gghighlight")
-ggplot(massmail_data_covid) +
-  geom_bar(aes(`date`, fill = covid19)) +
-  gghighlight(covid19, use_direct_label = FALSE) +
-  labs(
-    title = "Number of Times COVID-19 Showed up in Massmails Sent",
-    y = "Frequency",
-    x = "Date"
-  ) + facet_wrap(~year(date))
-
-ggplot(massmail_data_covid) +
-  geom_bar(aes(weekday, fill = covid19)) +
-  gghighlight(covid19, use_direct_label = FALSE) +
-  labs(
-    title = "Weekdays When Massmails Were Sent with COVID-19 Information",
-    y = "Frequency",
-    x = "Day of Week"
-  )
 ```
 
 ### Massmail Message Contents
 
-```{r}
-## Obtain e-mail content corpus ----
-massmail_corpus = VCorpus(VectorSource(massmail_data_covid$content))
-
-## Clean Text Corpus ----
-clean_abstract_corpus = function(corpus){
-    corpus = tm_map(corpus, content_transformer(tolower))
-    corpus = tm_map(corpus, removeWords, stopwords("en"))
-    corpus = tm_map(corpus, removePunctuation)
-    corpus = tm_map(corpus, removeNumbers)
-    corpus = tm_map(corpus, stripWhitespace)
-    corpus = tm_map(corpus, PlainTextDocument)
-    corpus = tm_map(corpus, removeWords,
-                    c("also", "use", "thus", "given", "well", "many",
-                      "may", "via", "way", "paper", "can", "using", "used",
-                      "shown", "apply", "provide", "will", "however",
-                      "often",
-                      "one", "two", "three", "four"))
-    return(corpus)
-}
-
-massmail_corpus_cleaned = clean_abstract_corpus(massmail_corpus)
-
-## Obtain Frequencies for Word Usage ----
-dtm_massmail = TermDocumentMatrix(massmail_corpus_cleaned)
-matrix_dtm = as.matrix(dtm_massmail)
-sorted_matrix_dtm = sort(rowSums(matrix_dtm), decreasing = TRUE)
-
-## Construct a popular words dataframe ----
-most_popular_words = data.frame(word = names(sorted_matrix_dtm),
-                                freq = sorted_matrix_dtm)
-
+```{r email-body-txt}
 ```
 
-### Most popular words
+#### Most popular words
 
 ```{r most-popular-words, warning=FALSE}
-head(most_popular_words, 10) %>%
-  knitr::kable(row.names = FALSE)
 ```
 
-### Wordcloud
+#### Wordcloud
 
 ```{r word-cloud, warning=FALSE}
-## Create a wordcloud ---- 
-set.seed(1830)
-subset_popular_words = most_popular_words[most_popular_words$freq > 20, ]
-ggplot(subset_popular_words,
-                  aes(
-                      label = word,
-                      size = freq,
-                      color = word
-                  )) +
-    geom_text_wordcloud_area(
-    ) +
-    scale_size_area(max_size = 12) +
-    theme_minimal() +
-    theme(plot.background = element_rect(fill = "black"),
-          plot.title = element_text(color = "white", hjust = 0.5, vjust = -5, size = 16)) +
-    theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) +
-    labs(title = "Most Popular Words Used in Massmails During COVID-19")
 ```
 
 
