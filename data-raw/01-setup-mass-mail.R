@@ -130,7 +130,7 @@ massmail_page = read_html("https://massmail.illinois.edu/massmailArchive")
 massmail_data = massmail_table(massmail_page)
 
 # Preview data inside of RStudio
-View(massmail_data)
+# View(massmail_data)
 
 # Export data ----
 #usethis::use_data(massmail_data, overwrite = TRUE)
