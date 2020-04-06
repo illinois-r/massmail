@@ -1,6 +1,6 @@
 on:
   schedule:
-    - cron:  '*/15 */24 * * *'
+    - cron:  '15 23 * * *'
     # Run at every 15th minute past every 24th hour ~ 1 refresh a day.
 
 name: data-refresh
