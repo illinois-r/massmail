@@ -1,6 +1,10 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+    #> 
+    #> The downloaded binary packages are in
+    #>  /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpNLgX8c/downloaded_packages
+
 # massmail
 
 <!-- badges: start -->
@@ -32,7 +36,7 @@ Data has **1109** observations and **7** variables:
 **Sample**
 
 | datetime            | date       | time  |  sent | subject                                  | url                                                   |
-| :------------------ | :--------- | :---: | ----: | :--------------------------------------- | :---------------------------------------------------- |
+| :------------------ | :--------- | :---- | ----: | :--------------------------------------- | :---------------------------------------------------- |
 | 2020-04-03 10:17:00 | 2020-04-03 | 10:17 | 76009 | COVID-19 update: Rising to the challenge | <https://massmail.illinois.edu/massmail/1930327.html> |
 
 **Email Contents**
