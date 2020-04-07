@@ -1,6 +1,10 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+    #> 
+    #> The downloaded binary packages are in
+    #>  /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp3y1vhV/downloaded_packages
+
 # massmail
 
 <!-- badges: start -->
@@ -17,7 +21,7 @@ The archive may be viewed here:
 
 <https://massmail.illinois.edu/massmailArchive>
 
-Data has **1109** observations and **7** variables:
+Data has **1112** observations and **7** variables:
 
   - `datetime`: Date and time when the email was sent in the form of
     `YYYY-MM-DD HMS` with either CDT or CST.
@@ -32,7 +36,7 @@ Data has **1109** observations and **7** variables:
 **Sample**
 
 | datetime            | date       | time  |  sent | subject                                  | url                                                   |
-| :------------------ | :--------- | :---: | ----: | :--------------------------------------- | :---------------------------------------------------- |
+| :------------------ | :--------- | :---- | ----: | :--------------------------------------- | :---------------------------------------------------- |
 | 2020-04-03 10:17:00 | 2020-04-03 | 10:17 | 76009 | COVID-19 update: Rising to the challenge | <https://massmail.illinois.edu/massmail/1930327.html> |
 
 **Email Contents**
@@ -205,16 +209,16 @@ head(most_popular_words, 10) %>%
 
 | word        | freq |
 | :---------- | ---: |
-| students    |  277 |
-| university  |  217 |
-| campus      |  214 |
-| faculty     |  129 |
-| information |  120 |
-| illinois    |  117 |
-| community   |  106 |
-| staff       |  105 |
-| student     |  105 |
-| health      |   94 |
+| students    |  280 |
+| university  |  225 |
+| campus      |  216 |
+| faculty     |  130 |
+| information |  123 |
+| illinois    |  122 |
+| community   |  110 |
+| staff       |  108 |
+| student     |  108 |
+| health      |  103 |
 
 #### Wordcloud
 
