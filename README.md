@@ -3,7 +3,7 @@
 
     #> 
     #> The downloaded binary packages are in
-    #>  /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpeE2zwX/downloaded_packages
+    #>  /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp2XtkPV/downloaded_packages
 
 # massmail
 
@@ -21,7 +21,7 @@ The archive may be viewed here:
 
 <https://massmail.illinois.edu/massmailArchive>
 
-Data has **1112** observations and **7** variables:
+Data has **1114** observations and **7** variables:
 
   - `datetime`: Date and time when the email was sent in the form of
     `YYYY-MM-DD HMS` with either CDT or CST.
@@ -209,15 +209,15 @@ head(most_popular_words, 10) %>%
 
 | word        | freq |
 | :---------- | ---: |
-| students    |  280 |
-| university  |  225 |
-| campus      |  216 |
-| faculty     |  130 |
-| information |  123 |
+| students    |  289 |
+| university  |  226 |
+| campus      |  217 |
+| faculty     |  133 |
+| information |  127 |
 | illinois    |  122 |
 | community   |  110 |
+| student     |  109 |
 | staff       |  108 |
-| student     |  108 |
 | health      |  103 |
 
 #### Wordcloud
