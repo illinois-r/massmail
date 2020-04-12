@@ -1,10 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-    #> 
-    #> The downloaded binary packages are in
-    #>  /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmpe2xIKt/downloaded_packages
-
 # massmail
 
 <!-- badges: start -->

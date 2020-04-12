@@ -17,7 +17,7 @@ knitr::read_chunk("R/03-ggplot-covid19-msg.R")
 knitr::read_chunk("R/04-wordcloud.R")
 ```
 
-```{r pkg-dependencies, inclue = FALSE, echo = FALSE, message=FALSE} 
+```{r pkg-dependencies, include = FALSE, echo = FALSE, message=FALSE} 
 ```
 
 # massmail
