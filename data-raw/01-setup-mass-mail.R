@@ -126,7 +126,7 @@ massmail_table = function(massmail_page) {
 
 
 # Build the massmail data table ----
-massmail_page = read_html("https://massmail.illinois.edu/massmailArchive")
+massmail_page = read_html(httr::GET("https://massmail.illinois.edu/massmailArchive"))
 massmail_data = massmail_table(massmail_page)
 
 # Preview data inside of RStudio
