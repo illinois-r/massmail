@@ -17,22 +17,22 @@ The archive may be viewed here:
 
 <https://massmail.illinois.edu/massmailArchive>
 
-Data has **1270** observations and **7** variables:
+Data has **1271** observations and **7** variables:
 
--   `datetime`: Date and time when the email was sent in the form of
+  - `datetime`: Date and time when the email was sent in the form of
     `YYYY-MM-DD HMS` with either CDT or CST.
--   `date`: Date when the email was sent in the form of `YYYY-MM-DD`.
--   `time`: Time when the email was sent in the form of a 24 hour clock
+  - `date`: Date when the email was sent in the form of `YYYY-MM-DD`.
+  - `time`: Time when the email was sent in the form of a 24 hour clock
     with `HH:MM`.
--   `sent`: Number of recipients of the massmail.
--   `subject`: Text displayed in the email subject line
--   `url`: Link to the official email in the massmail archive.
--   `content`: Contents of the email without html markup.
+  - `sent`: Number of recipients of the massmail.
+  - `subject`: Text displayed in the email subject line
+  - `url`: Link to the official email in the massmail archive.
+  - `content`: Contents of the email without html markup.
 
 **Sample**
 
 | datetime            | date       | time  |  sent | subject                                  | url                                                   |
-|:--------------------|:-----------|:------|------:|:-----------------------------------------|:------------------------------------------------------|
+| :------------------ | :--------- | :---- | ----: | :--------------------------------------- | :---------------------------------------------------- |
 | 2020-04-03 10:17:00 | 2020-04-03 | 10:17 | 76009 | COVID-19 update: Rising to the challenge | <https://massmail.illinois.edu/massmail/1930327.html> |
 
 **Email Contents**
@@ -51,8 +51,8 @@ Data has **1270** observations and **7** variables:
 
 Data is made available under two file formats:
 
--   CSV: [`massmail_data.csv`](data/massmail_data.csv)
--   RDA: [`massmail_data.rda`](data/massmail_data.rda)
+  - CSV: [`massmail_data.csv`](data/massmail_data.csv)
+  - RDA: [`massmail_data.rda`](data/massmail_data.rda)
 
 To read in the files use either:
 
@@ -152,6 +152,7 @@ ggplot(massmail_data_covid) +
 ![](README_files/figure-gfm/sample-graphic-1.png)<!-- -->
 
 ``` r
+
 ggplot(massmail_data_covid) +
   geom_bar(aes(weekday, fill = covid19)) +
   gghighlight(covid19, use_direct_label = FALSE, calculate_per_facet = TRUE) +
@@ -159,7 +160,8 @@ ggplot(massmail_data_covid) +
     title = "Weekdays When Massmails Were Sent with COVID-19 Information",
     y = "Frequency",
     x = "Day of Week"
-  )  + facet_wrap(~year(date))
+  ) + 
+  facet_wrap(~year(date))
 ```
 
 ![](README_files/figure-gfm/sample-graphic-2.png)<!-- -->
@@ -207,16 +209,16 @@ head(most_popular_words, 10) %>%
 ```
 
 | word        | freq |
-|:------------|-----:|
+| :---------- | ---: |
 | students    |  792 |
-| university  |  734 |
-| campus      |  729 |
+| university  |  737 |
+| campus      |  730 |
 | illinois    |  466 |
 | covid       |  420 |
-| faculty     |  389 |
-| community   |  384 |
-| information |  338 |
-| staff       |  316 |
+| faculty     |  390 |
+| community   |  385 |
+| information |  339 |
+| staff       |  317 |
 | health      |  301 |
 
 #### Wordcloud
@@ -260,4 +262,4 @@ James Joseph Balamuta
 
 ## License
 
-GPL (&gt;= 2)
+GPL (\>= 2)
