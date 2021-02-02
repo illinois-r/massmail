@@ -126,7 +126,18 @@ massmail_table = function(massmail_page) {
 
 
 # Build the massmail data table ----
+# Retrieve the massmail page
 massmail_page = read_html(httr::GET("https://massmail.illinois.edu/massmailArchive"))
+
+# Check to see if the archive is down.
+page_contents = massmail_page %>% html_text()
+
+if(grepl("Error occured.", page_contents)) {
+  message("Archive is not available.")
+  quit(save = "no", status = 0)
+}
+
+# Build an updated version of the massmail archive
 massmail_data = massmail_table(massmail_page)
 
 # Preview data inside of RStudio
