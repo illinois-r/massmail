@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![Data build
-status](https://github.com/coatless/massmail/workflows/data-refresh/badge.svg)](https://github.com/coatless/massmail/actions)
+status](https://github.com/illinois-r/massmail/workflows/data-refresh/badge.svg)](https://github.com/illinois-r/massmail/actions)
 <!-- badges: end -->
 
 The goal of the massmail repository is to provide access to the mass
