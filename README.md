@@ -152,7 +152,6 @@ ggplot(massmail_data_covid) +
 ![](README_files/figure-gfm/sample-graphic-1.png)<!-- -->
 
 ``` r
-
 ggplot(massmail_data_covid) +
   geom_bar(aes(weekday, fill = covid19)) +
   gghighlight(covid19, use_direct_label = FALSE, calculate_per_facet = TRUE) +
