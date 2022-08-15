@@ -1,4 +1,27 @@
 datetime,date,time,sent,subject,url,content
+2022-08-15T15:58:00Z,2022-08-15,15:58,99940,Log In Issues,https://massmail.illinois.edu/massmail/45151646.html,"Log In Issues
+                August 15, 2022 3:58 PM
+			
+        Dear Faculty, Staff and Students,
+On Saturday, August 13, Technology Services revised the process for students, faculty and staff to log in to some services. This included the requirement to use your full login address (netid@illinois.edu) and multi-factor authentication (MFA).  
+The changes were rehearsed in advance to minimize the impact to the campus community. Unfortunately, the change resulted in the unexpected outcome of forcing students, faculty and staff to log in for all NetID accounts on all signed-in devices (phones, tablets, computers, etc).  
+If you are aware of someone having issues logging in, please share the following information found in this KnowledgeBase article: https://go.illinois.edu/loginhelp.
+Desktop and mobile applications asking you to log in 
+Enter your full login address (most likely your University email address, netid@illinois.edu) 
+After logging in, verify using the Duo multi-factor application (if applicable)  
+If you access email from a mobile device, re-enter your password and use Duo in account settings to access your email. When prompted with the question, “Trust this Browser?” tap “Yes, trust browser."" This is a feature of the updated Duo screen experience that cannot be altered. 
+Error message: Message: AADSTS50107: The requested federation realm object 'http://illinois.edu/adfs/services/trust/' does not exist. 
+This error stems from using a bookmark or link pointing to the old sign-in page. 
+If you were using a bookmark, please delete it and create a new one with the correct link.
+You can access email by visiting  https://outlook.office.com and entering Netid@illinois.edu as your username.  
+Need to access other services? The ""Log In To Services"" section of the Technology Services homepage has direct links to many common university services. 
+If you're still having issues, try to clear browser cache and/or restart any affected applications. Instructions for clearing cache can be found at Browsers, Clearing Cache and Cookies.
+Please reach out to local IT Professionals and Help Desks if appropriate. 
+If further assistance is required, please reach out to the Technology Services Help Desk via the Tech Help Center or consult@illinois.edu.
+Please understand that call and ticket volume has been exceedingly high while addressing this issue. Your request will be addressed as soon as possible. The Technology Services Help Desk is open Monday – Friday from 8:00 a.m. to 9:00 p.m. and Saturday – Sunday from 12:00 p.m. to 5:00 p.m.  
+We apologize for the inconvenience and disruption you may have experienced. Thank you to the broader campus community for helping each other work through these changes. 
+Sincerely,
+Mairéad MartinChief Information Officer"
 2022-08-11T10:16:00Z,2022-08-11,10:16,99841,Update on COVID-19 testing,https://massmail.illinois.edu/massmail/763834775.html,"Update on COVID-19 testing
                 August 11, 2022 10:16 AM
 			
