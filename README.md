@@ -208,18 +208,18 @@ head(most_popular_words, 10) %>%
   knitr::kable(row.names = FALSE)
 ```
 
-| word        | freq |
-| :---------- | ---: |
-| university  | 1585 |
-| students    | 1392 |
-| campus      | 1288 |
-| illinois    | 1033 |
-| covid       | 1013 |
-| faculty     |  828 |
-| community   |  799 |
-| health      |  745 |
-| staff       |  681 |
-| information |  642 |
+| word       | freq |
+| :--------- | ---: |
+| university | 1592 |
+| students   | 1412 |
+| campus     | 1290 |
+| illinois   | 1040 |
+| covid      | 1013 |
+| faculty    |  830 |
+| community  |  806 |
+| health     |  745 |
+| staff      |  683 |
+| student    |  649 |
 
 #### Wordcloud
 
