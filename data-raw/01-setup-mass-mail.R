@@ -146,4 +146,4 @@ massmail_data = massmail_table(massmail_page)
 # Export data ----
 #usethis::use_data(massmail_data, overwrite = TRUE)
 save(massmail_data, file = "data/massmail_data.rda")
-readr::write_csv(massmail_data, path = "data/massmail_data.csv")
+readr::write_csv(massmail_data, file = "data/massmail_data.csv")
