@@ -17,22 +17,22 @@ The archive may be viewed here:
 
 <https://massmail.illinois.edu/massmailArchive>
 
-Data has **827** observations and **7** variables:
+Data has **811** observations and **7** variables:
 
-  - `datetime`: Date and time when the email was sent in the form of
-    `YYYY-MM-DD HMS` with either CDT or CST.
-  - `date`: Date when the email was sent in the form of `YYYY-MM-DD`.
-  - `time`: Time when the email was sent in the form of a 24 hour clock
-    with `HH:MM`.
-  - `sent`: Number of recipients of the massmail.
-  - `subject`: Text displayed in the email subject line
-  - `url`: Link to the official email in the massmail archive.
-  - `content`: Contents of the email without html markup.
+- `datetime`: Date and time when the email was sent in the form of
+  `YYYY-MM-DD HMS` with either CDT or CST.
+- `date`: Date when the email was sent in the form of `YYYY-MM-DD`.
+- `time`: Time when the email was sent in the form of a 24 hour clock
+  with `HH:MM`.
+- `sent`: Number of recipients of the massmail.
+- `subject`: Text displayed in the email subject line
+- `url`: Link to the official email in the massmail archive.
+- `content`: Contents of the email without html markup.
 
 **Sample**
 
 | datetime            | date       | time  |  sent | subject                                  | url                                                   |
-| :------------------ | :--------- | :---- | ----: | :--------------------------------------- | :---------------------------------------------------- |
+|:--------------------|:-----------|:------|------:|:-----------------------------------------|:------------------------------------------------------|
 | 2020-04-03 10:17:00 | 2020-04-03 | 10:17 | 76009 | COVID-19 update: Rising to the challenge | <https://massmail.illinois.edu/massmail/1930327.html> |
 
 **Email Contents**
@@ -51,8 +51,8 @@ Data has **827** observations and **7** variables:
 
 Data is made available under two file formats:
 
-  - CSV: [`massmail_data.csv`](data/massmail_data.csv)
-  - RDA: [`massmail_data.rda`](data/massmail_data.rda)
+- CSV: [`massmail_data.csv`](data/massmail_data.csv)
+- RDA: [`massmail_data.rda`](data/massmail_data.rda)
 
 To read in the files use either:
 
@@ -209,17 +209,17 @@ head(most_popular_words, 10) %>%
 ```
 
 | word       | freq |
-| :--------- | ---: |
-| university | 1625 |
-| students   | 1456 |
-| campus     | 1316 |
-| illinois   | 1055 |
-| covid      | 1044 |
-| faculty    |  855 |
-| community  |  826 |
-| health     |  768 |
-| staff      |  700 |
-| student    |  681 |
+|:-----------|-----:|
+| university | 1818 |
+| students   | 1582 |
+| campus     | 1434 |
+| illinois   | 1204 |
+| covid      | 1070 |
+| faculty    |  934 |
+| community  |  885 |
+| health     |  852 |
+| student    |  804 |
+| staff      |  779 |
 
 #### Wordcloud
 
