@@ -15,7 +15,7 @@ massmail_table_col = function(column_id, massmail_page) {
 # Email column specific rule
 massmail_table_col_email = function(massmail_page) {
   massmail_page %>%
-    html_nodes(".col3 a") %>%
+    html_nodes(".col4 a") %>%
     html_attr("href")
 }
 
