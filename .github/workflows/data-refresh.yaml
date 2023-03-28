@@ -9,11 +9,15 @@ name: data-refresh
 jobs:
   render:
     name: data-refresh
-    runs-on: macOS-latest
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: r-lib/actions/setup-r@v1
-      - uses: r-lib/actions/setup-pandoc@v1
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: r-lib/actions/setup-r@v2
+      - uses: r-lib/actions/setup-pandoc@v2
       - name: Install Dependencies
         run: Rscript -e 'install.packages(c("tidyverse", "tm", "ggwordcloud", "rvest", "lubridate", "rmarkdown"))'
       - name: Rebuild data
@@ -27,6 +31,8 @@ jobs:
         run: Rscript -e 'rmarkdown::render("README.Rmd")'
       - name: Commit README graph updates
         run: |
+          git config --local user.name "$GITHUB_ACTOR"
+          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git add README.md README_files/* || echo "No figures to add"
           git commit -m 'Re-build README.Rmd and Graphs' || echo "No updated figures to commit"
-          git push https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git HEAD:${{ github.ref }} || echo "Nothing to push to github..."
+          git push origin || echo "No changes to commit"
