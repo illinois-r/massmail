@@ -17,7 +17,7 @@ The archive may be viewed here:
 
 <https://massmail.illinois.edu/massmailArchive>
 
-Data has **817** observations and **7** variables:
+Data has **819** observations and **7** variables:
 
 - `datetime`: Date and time when the email was sent in the form of
   `YYYY-MM-DD HMS` with either CDT or CST.
@@ -210,16 +210,16 @@ head(most_popular_words, 10) %>%
 
 | word       | freq |
 |:-----------|-----:|
-| university | 1865 |
+| university | 1871 |
 | students   | 1606 |
-| campus     | 1446 |
-| illinois   | 1238 |
+| campus     | 1447 |
+| illinois   | 1243 |
 | covid      | 1070 |
-| faculty    |  958 |
-| community  |  897 |
-| health     |  896 |
+| faculty    |  960 |
+| community  |  898 |
+| health     |  897 |
 | student    |  817 |
-| staff      |  794 |
+| staff      |  795 |
 
 #### Wordcloud
 
