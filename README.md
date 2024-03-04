@@ -211,15 +211,15 @@ head(most_popular_words, 10) %>%
 | word       | freq |
 |:-----------|-----:|
 | university | 2124 |
-| students   | 1776 |
-| campus     | 1596 |
+| students   | 1777 |
+| campus     | 1601 |
 | illinois   | 1415 |
 | covid      | 1070 |
-| faculty    | 1034 |
+| faculty    | 1035 |
 | student    | 1026 |
-| community  |  981 |
+| community  |  983 |
 | health     |  974 |
-| staff      |  877 |
+| staff      |  878 |
 
 #### Wordcloud
 
