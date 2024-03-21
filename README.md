@@ -210,10 +210,10 @@ head(most_popular_words, 10) %>%
 
 | word       | freq |
 |:-----------|-----:|
-| university | 2128 |
+| university | 2129 |
 | students   | 1784 |
 | campus     | 1606 |
-| illinois   | 1423 |
+| illinois   | 1424 |
 | covid      | 1070 |
 | student    | 1042 |
 | faculty    | 1035 |
