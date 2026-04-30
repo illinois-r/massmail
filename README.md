@@ -31,8 +31,8 @@ Data has **1962** observations and **7** variables:
 
 **Sample**
 
-| datetime            | date       | time  |  sent | subject                                  | url                                                   |
-|:--------------------|:-----------|:------|------:|:-----------------------------------------|:------------------------------------------------------|
+| datetime | date | time | sent | subject | url |
+|:---|:---|:---|---:|:---|:---|
 | 2020-04-03 10:17:00 | 2020-04-03 | 10:17 | 76009 | COVID-19 update: Rising to the challenge | <https://massmail.illinois.edu/massmail/1930327.html> |
 
 **Email Contents**
