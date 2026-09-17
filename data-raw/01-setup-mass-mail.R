@@ -1,7 +1,11 @@
 # Load dependencies ----
+# Only what this script calls unqualified. readr, tibble, lubridate and tools
+# are reached with :: below, so they need to be installed but not attached --
+# and the tidyverse meta-package pulls in around a hundred packages this build
+# has no use for.
 library("rvest")
-library("tidyverse")
-library("lubridate")
+library("dplyr")
+library("purrr")
 
 # Where the published data lives ----
 massmail_csv_path = "data/massmail_data.csv"
@@ -98,7 +102,7 @@ massmail_read_email = function(massmail_email_url,
 
     message("Attempting approach one on ", path, " ...")
     approach_one = email %>%
-      html_node("#wrapper > tbody > tr:nth-child(2) > td:nth-child(3)") %>%
+      html_element("#wrapper > tbody > tr:nth-child(2) > td:nth-child(3)") %>%
       html_text(trim = TRUE)
 
     if(!is.na(approach_one) && !identical(approach_one, "")) return(approach_one)
@@ -106,7 +110,7 @@ massmail_read_email = function(massmail_email_url,
 
     # Based off of 27144.html
     approach_two = email %>%
-      html_node("#wrapper > tbody > tr:nth-child(2) > td:nth-child(2)") %>%
+      html_element("#wrapper > tbody > tr:nth-child(2) > td:nth-child(2)") %>%
       html_text(trim = TRUE)
 
     if(!is.na(approach_two) && !identical(approach_two, "")) return(approach_two)
@@ -115,7 +119,7 @@ massmail_read_email = function(massmail_email_url,
 
     # Based off of 26844.html
     approach_three = email %>%
-      html_node("table:nth-child(2) > tr:nth-child(1) ") %>%
+      html_element("table:nth-child(2) > tr:nth-child(1) ") %>%
       html_text(trim = TRUE)
 
     if(!is.na(approach_three) && !identical(approach_three, "")) return(approach_three)
@@ -124,7 +128,7 @@ massmail_read_email = function(massmail_email_url,
 
     # Based off of 26839.html
     approach_four = email %>%
-      html_node("table:nth-child(3) tr:nth-child(1)") %>%
+      html_element("table:nth-child(3) tr:nth-child(1)") %>%
       html_text(trim = TRUE)
 
     approach_four
@@ -593,9 +597,16 @@ massmail_table = function(massmail_page,
 # Skipped when the script is sourced by data-raw/test-01-setup-mass-mail.R.
 if (!identical(getOption("massmail.build"), FALSE)) {
 
-  # Retrieve the massmail page. read_html() stops on a non-200 response, so an
-  # unreachable archive fails the build before anything is written.
-  massmail_page = read_html(httr::GET("https://massmail.illinois.edu/massmailArchive"))
+  # Retrieve the massmail page. req_perform() raises on a non-2xx response, so an
+  # unreachable archive fails the build before anything is written, and
+  # req_retry() rides out the transient failures that used to lose a whole night.
+  massmail_page = httr2::request("https://massmail.illinois.edu/massmailArchive") %>%
+    httr2::req_user_agent(paste(
+      "massmail data build",
+      "(+https://github.com/illinois-r/massmail)")) %>%
+    httr2::req_retry(max_tries = 3) %>%
+    httr2::req_perform() %>%
+    httr2::resp_body_html()
 
   # Build an updated version of the massmail archive
   massmail_data = massmail_table(massmail_page)

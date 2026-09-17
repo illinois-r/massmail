@@ -39,8 +39,16 @@ jobs:
             libfontconfig1-dev libfreetype6-dev libharfbuzz-dev libfribidi-dev \
             libpng-dev libjpeg-dev libtiff-dev libwebp-dev libx11-dev zlib1g-dev
 
+      # Named individually rather than via the tidyverse meta-package: the build
+      # needs six of its packages and the figures five, not the hundred or so it
+      # depends on. httr2 replaces httr; gghighlight was missing and used to be
+      # installed mid-render.
       - name: Install Dependencies
-        run: Rscript -e 'install.packages(c("tidyverse", "tm", "ggwordcloud", "rvest", "lubridate", "rmarkdown"))'
+        run: |
+          Rscript -e 'install.packages(c(
+            "rvest", "httr2", "dplyr", "purrr", "readr", "tibble", "lubridate",
+            "ggplot2", "stringr", "tm", "ggwordcloud", "gghighlight",
+            "knitr", "rmarkdown"))'
       - name: Check the build script
         run: Rscript tests/test-massmail-build.R
 
