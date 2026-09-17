@@ -421,17 +421,20 @@ massmail_merge = function(scraped, previous) {
   if (is.null(previous) || nrow(previous) == 0L) return(massmail_arrange(scraped))
 
   # Rows published before this script parsed timestamps correctly stored the
-  # Champaign wall clock labelled Z, and an unpadded time. date and time are
-  # the local reading under both the old and the new convention, so rebuild
-  # datetime from those rather than trusting the stored offset.
+  # Champaign wall clock labelled Z, and an unpadded time; rows it writes now
+  # store a true instant with an offset. date and time read the same under both
+  # conventions, so rebuild datetime from those and from nothing else.
+  #
+  # There is deliberately no fallback to the stored datetime. The same value
+  # means Champaign wall clock in an old row and UTC in a new one, so any
+  # fallback is silently five or six hours wrong for one of them -- and it is
+  # wrong for every row the current build writes. If date and time cannot be
+  # read, the right answer is NA, which massmail_validate refuses to publish.
   previous = previous %>%
     mutate(
       `.id` = massmail_email_id(`url`),
-      `datetime` = dplyr::coalesce(
-        lubridate::ymd_hm(paste(`date`, `time`), tz = massmail_tz, quiet = TRUE),
-        lubridate::force_tz(`datetime`, massmail_tz,
-                            roll_dst = c("boundary", "post"))
-      ),
+      `datetime` = lubridate::ymd_hm(paste(`date`, `time`),
+                                     tz = massmail_tz, quiet = TRUE),
       `time` = format(`datetime`, "%H:%M")
     )
 

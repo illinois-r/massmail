@@ -337,6 +337,32 @@ expect("a carried row is anchored to Champaign time",
 expect("a carried row's legacy time is zero-padded",
        identical(carried_row$time, "22:08"))
 
+# date and time are the only unambiguous reading of when an e-mail went out, so
+# they are the only thing the rebuild may use. Falling back to the stored
+# datetime cannot work: the same value means Champaign wall clock in a row the
+# old build wrote and a true UTC instant in one the new build wrote, so any
+# fallback is silently five or six hours wrong for one of them.
+unreadable_time = tibble::tibble(
+  datetime = as.POSIXct("2026-09-09 19:31:00", tz = "UTC"),
+  date     = as.Date("2026-09-09"),
+  time     = "not a time",
+  sent     = 1000,
+  subject  = "Unreadable time",
+  url      = "https://massmail.illinois.edu/massmail/4242.html",
+  content  = "Body 4242"
+)
+still_listed = row_for("4243", "2026-09-10")
+was_published = dplyr::bind_rows(unreadable_time, still_listed)
+salvaged = massmail_merge(still_listed, was_published)
+salvaged_row = salvaged[salvaged$url == unreadable_time$url, ]
+
+expect("a carried row whose time cannot be read gets no timestamp at all",
+       is.na(salvaged_row$datetime))
+
+expect_error("and the build then refuses rather than publishing a guess",
+             massmail_validate(salvaged, was_published, still_listed),
+             "unparseable")
+
 cat("\nan unreadable new e-mail does not block the build\n")
 
 unparsed = row_for("6001", "2026-09-10", content = NA_character_)

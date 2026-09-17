@@ -204,6 +204,11 @@ mutations = list(
     replace = "  moved = paste(carried$`datetime`, carried$`subject`) %in%\n    paste(scraped$`datetime`, scraped$`subject`)"
   ),
   list(
+    name = "a carried row falls back to the stored datetime again",
+    find = "      `datetime` = lubridate::ymd_hm(paste(`date`, `time`),\n                                     tz = massmail_tz, quiet = TRUE),",
+    replace = "      `datetime` = dplyr::coalesce(lubridate::ymd_hm(paste(`date`, `time`), tz = massmail_tz, quiet = TRUE), lubridate::force_tz(`datetime`, massmail_tz, roll_dst = c(\"boundary\", \"post\"))),"
+  ),
+  list(
     name = "the published CSV goes back to a bare UTC timestamp",
     find = '    mutate(`datetime` = format(`datetime`, "%Y-%m-%dT%H:%M:%S%z")) %>%',
     replace = "    mutate(`datetime` = `datetime`) %>%"
