@@ -208,6 +208,16 @@ mutations = list(
     find = "      `datetime` = lubridate::ymd_hm(paste(`date`, `time`),\n                                     tz = massmail_tz, quiet = TRUE),",
     replace = "      `datetime` = dplyr::coalesce(lubridate::ymd_hm(paste(`date`, `time`), tz = massmail_tz, quiet = TRUE), lubridate::force_tz(`datetime`, massmail_tz, roll_dst = c(\"boundary\", \"post\"))),"
   ),
+  # Deliberately no mutation for removing the massmail_repair_entities() call
+  # itself. On a libxml2 that already applies HTML5 legacy decoding the repair is
+  # a no-op, so dropping it changes nothing observable here and the mutation
+  # would survive on some machines and be caught on others. The regex below is
+  # what the suite can pin everywhere.
+  list(
+    name = "the repair also rewrites properly terminated entities",
+    find = "  gsub(\"&(amp|gt|lt|quot|copy|reg|nbsp)(?![a-zA-Z0-9#;])\", \"&\\\\1;\", html,",
+    replace = "  gsub(\"&(amp|gt|lt|quot|copy|reg|nbsp);?\", \"&\\\\1;\", html,"
+  ),
   list(
     name = "the published CSV goes back to a bare UTC timestamp",
     find = '    mutate(`datetime` = format(`datetime`, "%Y-%m-%dT%H:%M:%S%z")) %>%',

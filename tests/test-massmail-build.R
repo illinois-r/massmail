@@ -232,6 +232,54 @@ expect("normalising line endings keeps the lines themselves intact",
        identical(strsplit(crlf_body, "\n", fixed = TRUE)[[1]],
                  c("First line.", "Second line.", "Third line.")))
 
+cat("\nbare html entities are terminated before parsing\n")
+
+# HTML5 decodes a legacy named reference even when its semicolon is missing.
+# Some libxml2 builds do that and some do not, so four 2011-2013 e-mails whose
+# source reads `...portalId=909965&amp</a>;pageId=...` came out with a literal
+# `&amp;` in the body once the build moved from a macOS runner to Ubuntu.
+# Terminating the reference first gets the same text out of either build.
+
+expect("a reference missing its semicolon is terminated",
+       identical(massmail_repair_entities("see &amp<br/>here"), "see &amp;<br/>here"))
+
+expect("the references HTML5 decodes without a semicolon are terminated",
+       identical(massmail_repair_entities("&amp &gt &lt &quot &copy &reg &nbsp"),
+                 "&amp; &gt; &lt; &quot; &copy; &reg; &nbsp;"))
+
+# HTML5 requires the semicolon for &apos, so terminating it here would decode
+# something a browser shows as literal text.
+expect("a reference HTML5 does not decode bare is left bare",
+       identical(massmail_repair_entities("it&apos s"), "it&apos s"))
+
+expect("a properly terminated reference is left exactly as it is",
+       identical(massmail_repair_entities("A&amp;amp;B"), "A&amp;amp;B"))
+
+expect("a numeric reference is left alone",
+       identical(massmail_repair_entities("&#38; and &#13;"), "&#38; and &#13;"))
+
+expect("a word that merely starts like a reference is not touched",
+       identical(massmail_repair_entities("&ampere &gtr"), "&ampere &gtr"))
+
+expect("the real shape from the archive is repaired",
+       identical(massmail_repair_entities("portalId=909965&amp</a>;pageId=919592"),
+                 "portalId=909965&amp;</a>;pageId=919592"))
+
+# End to end: the body that comes out carries no leftover markup.
+writeLines(
+  paste0('<html><body><table id="wrapper"><tbody><tr><td>x</td></tr>',
+         '<tr><td>s</td><td>s</td><td>Go to http://x.test/a?b=1&amp;c=2 now.</td>',
+         '</tr></tbody></table></body></html>'),
+  file.path(cache, "88.html")
+)
+
+expect("no entity markup survives into a published body",
+       {
+         body = massmail_read_email("https://massmail.illinois.edu/massmail/88.html",
+                                    save_dir = cache)
+         identical(body, "Go to http://x.test/a?b=1&c=2 now.")
+       })
+
 cat("\ncolumn formatting\n")
 
 page = xml2::read_html(paste0(

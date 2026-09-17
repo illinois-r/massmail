@@ -86,6 +86,21 @@ massmail_download_email = function(massmail_email_url,
   }
 }
 
+# HTML5 decodes a legacy named reference even when its closing semicolon is
+# missing, and some libxml2 builds do that while others leave the text alone.
+# Four 2011-2013 e-mails whose source reads `...portalId=909965&amp</a>;pageId`
+# therefore gained a literal `&amp;` in their body when the build moved from a
+# macOS runner to Ubuntu. Terminating the reference before parsing gets the same
+# text out of either build. A reference that already has its semicolon does not
+# match, so genuinely escaped markup survives untouched.
+massmail_repair_entities = function(html) {
+  # Only the references HTML5 lists as decodable without their semicolon. &apos
+  # is deliberately absent: HTML5 requires its semicolon, and terminating it
+  # here would decode something a browser leaves as text.
+  gsub("&(amp|gt|lt|quot|copy|reg|nbsp)(?![a-zA-Z0-9#;])", "&\\1;", html,
+       perl = TRUE)
+}
+
 massmail_read_email = function(massmail_email_url,
                                save_dir = massmail_cache_dir) {
 
@@ -98,7 +113,7 @@ massmail_read_email = function(massmail_email_url,
     # the whole build stopping here.
     if (!file.exists(path)) return(NA_character_)
 
-    email = read_html(path)
+    email = read_html(charToRaw(massmail_repair_entities(readr::read_file(path))))
 
     message("Attempting approach one on ", path, " ...")
     approach_one = email %>%
