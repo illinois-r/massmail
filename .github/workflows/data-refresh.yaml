@@ -1,5 +1,8 @@
 on:
   workflow_dispatch:
+  # Run the checks and a full build against a pull request, without publishing
+  # anything -- the commit steps below sit this one out.
+  pull_request:
   schedule:
     - cron:  '15 23 * * *'
     # Run at every 15th minute past every 24th hour ~ 1 refresh a day.
@@ -9,34 +12,92 @@ name: data-refresh
 jobs:
   render:
     name: data-refresh
-    runs-on: macos-latest
+    # Ubuntu, not macOS: this job only needs R, and with use-public-rspm below
+    # the runner installs precompiled Linux binaries instead of building from
+    # source. Cheaper per minute and faster.
+    runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      # This job reads the current tree and adds one commit on top, so it has no
+      # use for the history -- and fetching all of it means cloning a ~740 MB
+      # repository every night.
+      - uses: actions/checkout@v7
       - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
       - uses: r-lib/actions/setup-pandoc@v2
+
+      # The shared libraries the binaries above link against. Most are already
+      # on the runner image; harfbuzz, fribidi and the image codecs are the ones
+      # that routinely are not, and ragg/textshaping fail to load without them.
+      - name: Install system libraries
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            libcurl4-openssl-dev libssl-dev libxml2-dev libicu-dev libuv1-dev \
+            libfontconfig1-dev libfreetype6-dev libharfbuzz-dev libfribidi-dev \
+            libpng-dev libjpeg-dev libtiff-dev libwebp-dev libx11-dev zlib1g-dev
+
       - name: Install Dependencies
         run: Rscript -e 'install.packages(c("tidyverse", "tm", "ggwordcloud", "rvest", "lubridate", "rmarkdown"))'
+      - name: Check the build script
+        run: Rscript tests/test-massmail-build.R
+
+      # Breaking the build script 23 ways and re-running the suite against each
+      # is a developer check, not a nightly one -- it only tells you something
+      # when the script or the tests have changed. Runs on a manual dispatch.
+      - name: Check the tests can fail
+        if: github.event_name != 'schedule'
+        run: Rscript tests/verify-tests.R
+
       - name: Rebuild data
         run: Rscript -e 'source("data-raw/01-setup-mass-mail.R")'
+
+      - name: Report e-mails the parser could not read
+        if: always()
+        run: |
+          record=data-raw/unparsed-emails.csv
+          if [ -s "$record" ] && [ "$(tail -n +2 "$record" | wc -l)" -gt 0 ]; then
+            {
+              echo "### E-mails the parser could not read"
+              echo ""
+              echo "These are listed on the archive but have no body this build could"
+              echo "extract, so they are not in the published data yet. They will be"
+              echo "picked up automatically once \`massmail_read_email()\` handles their"
+              echo "template."
+              echo ""
+              echo '```'
+              cat "$record"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No unreadable e-mails." >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Commit data updates
+        if: github.event_name != 'pull_request'
         run: |
           git config --local user.name "$GITHUB_ACTOR"
           git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git add data/* data-raw/* || echo "No new data to add"
-          git commit -m 'Re-build data' || echo "No data changes to commit"
-          git push origin || echo "No changes to commit"
+          # Nothing to commit is a normal quiet day. A failed push is not: it
+          # means today's data never reached the remote, and swallowing it is
+          # how a run can go green having published nothing.
+          if git commit -m 'Re-build data'; then
+            git push origin HEAD:"${GITHUB_REF_NAME}"
+          else
+            echo "No data changes to commit"
+          fi
       - name: Render README
         run: Rscript -e 'rmarkdown::render("README.Rmd")'
       - name: Commit README graph updates
+        if: github.event_name != 'pull_request'
         run: |
           git config --local user.name "$GITHUB_ACTOR"
           git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git add README.md README_files/* || echo "No figures to add"
-          git commit -m 'Re-build README.Rmd and Graphs' || echo "No updated figures to commit"
-          git push origin || echo "No changes to commit"
+          if git commit -m 'Re-build README.Rmd and Graphs'; then
+            git push origin HEAD:"${GITHUB_REF_NAME}"
+          else
+            echo "No updated figures to commit"
+          fi
