@@ -1,5 +1,6 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+<!-- README.md is generated from README.qmd. Please edit that file -->
 
 # massmail
 
@@ -19,11 +20,15 @@ The archive may be viewed here:
 
 Data has **1992** observations and **7** variables:
 
-- `datetime`: Date and time when the email was sent in the form of
-  `YYYY-MM-DD HMS` with either CDT or CST.
-- `date`: Date when the email was sent in the form of `YYYY-MM-DD`.
+- `datetime`: Date and time when the email was sent, as an ISO 8601
+  timestamp carrying the Urbana-Champaign offset,
+  e.g. `2026-09-09T14:31:00-0500` (`-0600` outside daylight saving).
+  Read it with `tz = "America/Chicago"` to get the local wall clock
+  back; a bare `read_csv()` will show it in UTC.
+- `date`: Date when the email was sent in the form of `YYYY-MM-DD`,
+  local to Urbana-Champaign.
 - `time`: Time when the email was sent in the form of a 24 hour clock
-  with `HH:MM`.
+  with `HH:MM`, zero padded, local to Urbana-Champaign.
 - `sent`: Number of recipients of the massmail.
 - `subject`: Text displayed in the email subject line
 - `url`: Link to the official email in the massmail archive.
@@ -33,7 +38,7 @@ Data has **1992** observations and **7** variables:
 
 | datetime | date | time | sent | subject | url |
 |:---|:---|:---|---:|:---|:---|
-| 2020-04-03 10:17:00 | 2020-04-03 | 10:17 | 76009 | COVID-19 update: Rising to the challenge | <https://massmail.illinois.edu/massmail/1930327.html> |
+| 2020-04-03 10:17:00 | 2020-04-03 | 10:17 | 76009 | COVID-19 update: Rising to the challenge | https://massmail.illinois.edu/massmail/1930327.html |
 
 **Email Contents**
 
@@ -92,8 +97,11 @@ in *R* and can be found at
 
 ``` r
 # Script dependencies ----
-# All packages needed for script
-pkg_list = c("tm", "tidyverse", "lubridate", "ggwordcloud", "gghighlight", "knitr", "rmarkdown")
+# The packages these scripts actually call, rather than the tidyverse
+# meta-package: it attaches nine and depends on around a hundred, where the
+# figures and the word cloud need five of them.
+pkg_list = c("tm", "ggplot2", "dplyr", "readr", "stringr", "lubridate",
+             "ggwordcloud", "gghighlight", "knitr", "rmarkdown")
 # Determine what packages are NOT installed already.
 to_install_pkgs = pkg_list[!(pkg_list %in% installed.packages()[,"Package"])]
 # Install the missing packages
@@ -149,7 +157,7 @@ ggplot(massmail_data_covid) +
   )
 ```
 
-![](README_files/figure-gfm/sample-graphic-1.png)<!-- -->
+![](README_files/figure-commonmark/sample-graphic-1.png)
 
 ``` r
 
@@ -164,7 +172,7 @@ ggplot(massmail_data_covid) +
   facet_wrap(~year(date))
 ```
 
-![](README_files/figure-gfm/sample-graphic-2.png)<!-- -->
+![](README_files/figure-commonmark/sample-graphic-2.png)
 
 ### Massmail Message Contents
 
@@ -243,7 +251,7 @@ ggplot(subset_popular_words,
   labs(title = "Most Popular Words Used in Massmails During COVID-19")
 ```
 
-![](README_files/figure-gfm/word-cloud-1.png)<!-- -->
+![](README_files/figure-commonmark/word-cloud-1.png)
 
 ## Acknowledgements
 
