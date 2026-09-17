@@ -36,10 +36,14 @@ here:
 
 Data has **`r nrow(massmail_data)`** observations and **`r ncol(massmail_data)`** variables:
 
-- `datetime`: Date and time when the email was sent in the form of `YYYY-MM-DD HMS` 
-  with either CDT or CST.
-- `date`: Date when the email was sent in the form of `YYYY-MM-DD`.
-- `time`: Time when the email was sent in the form of a 24 hour clock with `HH:MM`.
+- `datetime`: Date and time when the email was sent, as an ISO 8601 timestamp
+  carrying the Urbana-Champaign offset, e.g. `2026-09-09T14:31:00-0500`
+  (`-0600` outside daylight saving). Read it with `tz = "America/Chicago"` to
+  get the local wall clock back; a bare `read_csv()` will show it in UTC.
+- `date`: Date when the email was sent in the form of `YYYY-MM-DD`, local to
+  Urbana-Champaign.
+- `time`: Time when the email was sent in the form of a 24 hour clock with
+  `HH:MM`, zero padded, local to Urbana-Champaign.
 - `sent`: Number of recipients of the massmail.
 - `subject`: Text displayed in the email subject line
 - `url`: Link to the official email in the massmail archive.
