@@ -1,0 +1,26 @@
+# Git sees a CSV as plain text and knows nothing about quoted fields, so an
+# end-of-line conversion rewrites the data itself rather than just the file's
+# line terminators: the content column holds e-mail bodies with newlines inside
+# quotes, and a Windows checkout under `text=auto` turns each of those into a
+# CRLF. Store the generated data and the cached e-mails byte for byte instead,
+# so every clone reads back exactly what the build wrote.
+#
+# Line endings inside e-mail bodies are normalised where they belong, when the
+# body is parsed -- see massmail_read_email() in data-raw/01-setup-mass-mail.R.
+# One normaliser, in the build, rather than a second hidden one in git.
+data/massmail_data.csv          -text
+data/massmail_data.rda          binary
+data-raw/unparsed-emails.csv    -text
+data-raw/massmail-emails/*.html -text
+README_files/**/*.png           binary
+
+# Everything else is ordinary source, checked out with LF everywhere so the
+# build and the tests see the same bytes on any machine.
+*.R             text eol=lf
+*.qmd           text eol=lf
+*.md            text eol=lf
+*.yaml          text eol=lf
+*.Rproj         text eol=lf
+.gitattributes  text eol=lf
+.gitignore      text eol=lf
+.Rbuildignore   text eol=lf

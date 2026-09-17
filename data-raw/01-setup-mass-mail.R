@@ -135,7 +135,14 @@ massmail_read_email = function(massmail_email_url,
 
    }
 
-  map_chr(file_loc, massmail_email_body)
+  bodies = map_chr(file_loc, massmail_email_body)
+
+  # Some libxml2 builds apply HTML5 input preprocessing, which folds CRLF and a
+  # lone CR to LF, and some do not -- so without this the line endings in the
+  # published corpus depend on which machine ran the build. Moving the runner
+  # from macOS to Ubuntu rewrote 877 of 1992 content values for exactly that
+  # reason, and the next runner image could rewrite them back.
+  gsub("\r", "\n", gsub("\r\n", "\n", bodies, fixed = TRUE), fixed = TRUE)
 }
 
 # Attach e-mail bodies to their rows, keyed on url. The cache holds e-mails the
@@ -437,11 +444,18 @@ massmail_merge = function(scraped, previous) {
 
   # An e-mail the archive has re-listed under a new identifier looks like two
   # e-mails: a carried row under the old id and a scraped row under the new one.
-  # No two massmails have ever shared a send time and a subject, and a carried
-  # row is by definition not in today's listing, so a match means the e-mail
-  # moved. Keep the scraped row -- it has the identifier that still works.
-  moved = paste(carried$`datetime`, carried$`subject`) %in%
-    paste(scraped$`datetime`, scraped$`subject`)
+  # A carried row is by definition not in today's listing, so a row that matches
+  # one that is has moved rather than disappeared -- keep the scraped row, which
+  # has the identifier that still works, and drop the stale copy.
+  #
+  # The body has to match too. Send time and subject alone would also match two
+  # genuinely different massmails that happen to go out in the same minute under
+  # the same subject, and dropping the carried one would silently lose an e-mail
+  # -- the exact failure this merge exists to prevent. "Launching Illinois
+  # Leads" went out twice a minute apart on 2026-09-17, so that is not far off.
+  # Publishing a visible duplicate is the better way to be wrong.
+  moved = paste(carried$`datetime`, carried$`subject`, carried$`content`) %in%
+    paste(scraped$`datetime`, scraped$`subject`, scraped$`content`)
   if (any(moved)) {
     message("Re-identifying ", sum(moved),
             " e-mail(s) the archive now lists under a different url.")

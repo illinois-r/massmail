@@ -208,6 +208,30 @@ expect("content is attached by url even when the cache is longer than the table"
 expect("attaching content does not change the number of rows",
        nrow(attached) == 3L)
 
+# Some libxml2 builds apply HTML5 input preprocessing (CRLF -> LF) and some do
+# not, so without this the line endings in the published corpus depend on which
+# machine ran the build. Switching the runner from macOS to Ubuntu rewrote 877
+# of 1992 content values for exactly this reason.
+# A literal CR is swallowed by HTML5 input preprocessing on the parsers that do
+# it, which is the very difference at issue -- so encode it, since a numeric
+# character reference is decoded afterwards and survives on every build.
+writeLines(
+  paste0('<html><body><table id="wrapper"><tbody><tr><td>x</td></tr>',
+         '<tr><td>s</td><td>s</td>',
+         '<td>First line.&#13;&#10;Second line.&#13;Third line.</td>',
+         '</tr></tbody></table></body></html>'),
+  file.path(cache, "77.html")
+)
+crlf_body = massmail_read_email("https://massmail.illinois.edu/massmail/77.html",
+                                save_dir = cache)
+
+expect("carriage returns from the source html do not reach the published content",
+       !grepl("\r", crlf_body, fixed = TRUE))
+
+expect("normalising line endings keeps the lines themselves intact",
+       identical(strsplit(crlf_body, "\n", fixed = TRUE)[[1]],
+                 c("First line.", "Second line.", "Third line.")))
+
 cat("\ncolumn formatting\n")
 
 page = xml2::read_html(paste0(
@@ -722,6 +746,26 @@ expect("the new identifier is the one that is kept",
 
 expect("an e-mail that simply stopped being listed is still carried",
        "Subject 1003" %in% moved_away$subject)
+
+# Two massmails really can share a subject minutes apart -- "Launching Illinois
+# Leads" went out twice, a minute apart, on 2026-09-17. If two such e-mails ever
+# share the same minute, matching on send time and subject alone would delete
+# the one the archive has stopped listing, which is the exact loss this whole
+# merge exists to prevent. Losing a row is worse than publishing a duplicate.
+coincidence = dplyr::mutate(published[1, ],
+                            url = sub("1001", "1010", url),
+                            content = "A different message sent in the same minute.")
+kept_both = massmail_merge(coincidence, published)
+
+expect("an e-mail is not dropped just because another shares its time and subject",
+       nrow(kept_both) == 4L &&
+         all(published$url %in% kept_both$url))
+
+expect("the genuinely re-identified case still collapses to one row",
+       nrow(massmail_merge(
+         dplyr::mutate(published[1, ],
+                       url = sub("/massmail/(\\d+)", "/massmail/m-\\1", url)),
+         published)) == 3L)
 
 # The remaining fingerprint check has to be narrow enough that two genuinely
 # different massmails sent in the same minute do not trip it.

@@ -189,6 +189,21 @@ mutations = list(
     replace = "                                      massmail_data$`subject`))"
   ),
   list(
+    name = "line endings are left to whatever the runner's parser does",
+    find = '  gsub("\\r", "\\n", gsub("\\r\\n", "\\n", bodies, fixed = TRUE), fixed = TRUE)',
+    replace = "  bodies"
+  ),
+  list(
+    name = "only CRLF is folded, a lone CR still leaks through",
+    find = '  gsub("\\r", "\\n", gsub("\\r\\n", "\\n", bodies, fixed = TRUE), fixed = TRUE)',
+    replace = '  gsub("\\r\\n", "\\n", bodies, fixed = TRUE)'
+  ),
+  list(
+    name = "a send-time-and-subject coincidence deletes an e-mail again",
+    find = "  moved = paste(carried$`datetime`, carried$`subject`, carried$`content`) %in%\n    paste(scraped$`datetime`, scraped$`subject`, scraped$`content`)",
+    replace = "  moved = paste(carried$`datetime`, carried$`subject`) %in%\n    paste(scraped$`datetime`, scraped$`subject`)"
+  ),
+  list(
     name = "the published CSV goes back to a bare UTC timestamp",
     find = '    mutate(`datetime` = format(`datetime`, "%Y-%m-%dT%H:%M:%S%z")) %>%',
     replace = "    mutate(`datetime` = `datetime`) %>%"
