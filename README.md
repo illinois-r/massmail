@@ -18,7 +18,7 @@ The archive may be viewed here:
 
 <https://massmail.illinois.edu/massmailArchive>
 
-Data has **1995** observations and **7** variables:
+Data has **1996** observations and **7** variables:
 
 - `datetime`: Date and time when the email was sent, as an ISO 8601
   timestamp carrying the Urbana-Champaign offset,
@@ -218,14 +218,14 @@ head(most_popular_words, 10) %>%
 
 | word        | freq |
 |:------------|-----:|
-| university  | 2760 |
-| students    | 2236 |
-| campus      | 1959 |
-| illinois    | 1944 |
+| university  | 2761 |
+| students    | 2237 |
+| campus      | 1960 |
+| illinois    | 1945 |
 | student     | 1430 |
 | faculty     | 1276 |
 | health      | 1187 |
-| community   | 1176 |
+| community   | 1177 |
 | information | 1146 |
 | staff       | 1117 |
 
